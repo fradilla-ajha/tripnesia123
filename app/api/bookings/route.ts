@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { getSupabaseServerClient } from "@/lib/supabase/server"
 
+// ------------------------- GET -------------------------
 export async function GET() {
   const supabase = getSupabaseServerClient()
   const { data, error } = await supabase.from("bookings").select("*").order("id", { ascending: true })
@@ -14,11 +15,13 @@ export async function GET() {
     name: b.name,
     type: b.type as "flight" | "ship" | "hotel",
     destination: b.destination,
-    date: b.date, // ISO yyyy-mm-dd
+    date: b.date,
   }))
+
   return NextResponse.json({ data: mapped })
 }
 
+// ------------------------- POST -------------------------
 export async function POST(req: Request) {
   try {
     const body = await req.json()
@@ -47,14 +50,67 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
-    const mapped = {
-      id: data.id,
-      name: data.name,
-      type: data.type as "flight" | "ship" | "hotel",
-      destination: data.destination,
-      date: data.date,
+    return NextResponse.json({ data }, { status: 201 })
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 })
+  }
+}
+
+// ------------------------- PUT -------------------------
+export async function PUT(req: Request) {
+  try {
+    const body = await req.json()
+    if (!body.id) {
+      return NextResponse.json({ error: "Missing 'id' field" }, { status: 400 })
     }
-    return NextResponse.json({ data: mapped }, { status: 201 })
+
+    if (body.type && !["flight", "ship", "hotel"].includes(String(body.type))) {
+      return NextResponse.json({ error: "Invalid type. Must be flight | ship | hotel" }, { status: 400 })
+    }
+
+    const supabase = getSupabaseServerClient()
+    const { data, error } = await supabase
+      .from("bookings")
+      .update({
+        ...(body.name && { name: String(body.name) }),
+        ...(body.type && { type: String(body.type) }),
+        ...(body.destination && { destination: String(body.destination) }),
+        ...(body.date && { date: String(body.date) }),
+      })
+      .eq("id", body.id)
+      .select("*")
+      .single()
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+
+    if (!data) {
+      return NextResponse.json({ error: "Booking not found" }, { status: 404 })
+    }
+
+    return NextResponse.json({ data })
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 })
+  }
+}
+
+// ------------------------- DELETE -------------------------
+export async function DELETE(req: Request) {
+  try {
+    const body = await req.json()
+    if (!body.id) {
+      return NextResponse.json({ error: "Missing 'id' field" }, { status: 400 })
+    }
+
+    const supabase = getSupabaseServerClient()
+    const { error } = await supabase.from("bookings").delete().eq("id", body.id)
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+
+    return NextResponse.json({ message: `Booking with id ${body.id} deleted successfully` })
   } catch {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 })
   }
