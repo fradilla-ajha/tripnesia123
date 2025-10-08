@@ -10,7 +10,7 @@ export default function HeaderNavbar() {
 
   const navItems = [
     { name: "Destinations", href: "/destinations" },
-    { name: "Activity", href: "/activity" },
+    { name: "Activity", href: "/https://tripnesia-vm51.vercel.app/api/bookings?action=list" },
     { name: "Hotel", href: "/hotel" },
   ]
   return (
