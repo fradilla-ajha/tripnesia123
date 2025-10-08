@@ -4,13 +4,15 @@
 import { useState } from "react"
 import { Menu, X } from "lucide-react"
 import Link from "next/link"
+import { Button } from "./ui/button"
 
 export default function HeaderNavbar() {
   const [isOpen, setIsOpen] = useState(false)
 
   const navItems = [
+    { name: "Eksplore", href: "/explore" },
     { name: "Destinations", href: "/destinations" },
-    { name: "Activity", href: "/https://blog-private-nu.vercel.app/" },
+    { name: "Activity", href: "/activity" },
     { name: "Hotel", href: "/hotel" },
   ]
   return (
@@ -20,6 +22,12 @@ export default function HeaderNavbar() {
         <Link href="/" className="text-2xl font-bold text-blue-600">
           🌍 Tripnesia
         </Link>
+
+        {/* <Link href="/activity">
+          <Button className="text-blue-600">
+            Eksplore ajha
+          </Button>
+        </Link> */}
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center space-x-8">
