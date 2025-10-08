@@ -12,6 +12,7 @@ export default function HeaderNavbar() {
     { name: "Destinations", href: "/destinations" },
     { name: "Activity", href: "/activity" },
     { name: "Hotel", href: "/hotel" },
+    { name: "Hotel", href: "/hotel" },
   ]
 
   return (
