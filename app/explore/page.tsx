@@ -18,7 +18,7 @@ const dataKelompok = [
   },
   {
     nama: "Website Kelompok 4",
-    link: "https://projekkelompok4-production.up.railway.app/",
+    link: "https://projekkelompok4-production.up.railway.app/makanan",
     deskripsi: "Pemesanan Makanan & Minuman",
   },
   {
@@ -28,7 +28,7 @@ const dataKelompok = [
   },
   {
     nama: "Website Kelompok 6",
-    link: "https://v0-house-cafe-website-project.vercel.app/",
+    link: "https://v0-house-cafe-website-project.vercel.app/reservasi/",
     deskripsi: "HouseCafe",
   },
   {
@@ -38,12 +38,12 @@ const dataKelompok = [
   },
   {
     nama: "Website Kelompok 8",
-    link: "",
-    deskripsi: "JustBuy (belum tersedia)",
+    link: "https://projekkelompok9-production.up.railway.app/",
+    deskripsi: "JustBuy",
   },
   {
     nama: "Website Kelompok 9",
-    link: "https://dodgerblue-monkey-417412.hostingersite.com/",
+    link: "https://dodgerblue-monkey-417412.hostingersite.com/meja",
     deskripsi: "Cafeku",
   },
 ];
