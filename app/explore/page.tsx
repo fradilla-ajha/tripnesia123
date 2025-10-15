@@ -1,86 +1,43 @@
 "use client";
+import Link from "next/link";
 
-import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { ExternalLink } from "lucide-react";
+export default function ExplorePage() {
+  const kelompokList = [
+    { id: 1, nama: "Kelompok 1", deskripsi: "Demo CRUD Produk — Explore fitur interaktif", path: "/explore/kelompok1" },
+    { id: 3, nama: "Kelompok 3", deskripsi: "Gadget House — Sistem manajemen produk", path: "/explore/kelompok3" },
+    { id: 4, nama: "Kelompok 4", deskripsi: "Pemesanan makanan & minuman", path: "/explore/kelompok4" },
+    { id: 5, nama: "Kelompok 5", deskripsi: "Aplikasi Booking — Modul reservasi", path: "/explore/kelompok5" },
+    { id: 6, nama: "Kelompok 6", deskripsi: "Reservasi Tempat", path: "/explore/kelompok6" },
+    { id: 7, nama: "Kelompok 7", deskripsi: "Aplikasi Informasi Wisata", path: "/explore/kelompok7" },
+    { id: 9, nama: "Kelompok 9", deskripsi: "Sistem Evaluasi Produk", path: "/explore/kelompok9" },
+    { id: 10, nama: "Kelompok 10", deskripsi: "Cafeku — Menu & Produk", path: "/explore/kelompok10" },
+  ];
 
-const dataKelompok = [
-  {
-    nama: "Website Kelompok 1",
-    link: "https://rental-baju.netlify.app/",
-    deskripsi: "RentalBaju",
-  },
-  {
-    nama: "Website Kelompok 3",
-    link: "http://www.cvjayatehnik.com/",
-    deskripsi: "Gadget House",
-  },
-  {
-    nama: "Website Kelompok 4",
-    link: "https://projekkelompok4-production.up.railway.app/makanan",
-    deskripsi: "Pemesanan Makanan & Minuman",
-  },
-  {
-    nama: "Website Kelompok 5",
-    link: "https://projek5-production.up.railway.app/",
-    deskripsi: "Caffee Galeri",
-  },
-  {
-    nama: "Website Kelompok 6",
-    link: "https://v0-house-cafe-website-project.vercel.app/reservasi/",
-    deskripsi: "HouseCafe",
-  },
-  {
-    nama: "Website Kelompok 7",
-    link: "https://sobatpromo.fwh.is/",
-    deskripsi: "SobatPromo",
-  },
-  {
-    nama: "Website Kelompok 8",
-    link: "https://projekkelompok9-production.up.railway.app/",
-    deskripsi: "JustBuy",
-  },
-  {
-    nama: "Website Kelompok 9",
-    link: "https://dodgerblue-monkey-417412.hostingersite.com/meja",
-    deskripsi: "Cafeku",
-  },
-];
-
-const HalamanKelompok: React.FC = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100 p-10 pt-24">
-      {/* ↑ Tambahkan pt-24 agar konten tidak tertutup navbar */}
-
+    <div className="min-h-screen bg-gray-100 p-8 pt-24">
       <h1 className="text-3xl font-bold text-center mb-8 text-blue-800">
-        Eksplorasi Website
+        Explore Kelompok
       </h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {dataKelompok.map((item, index) => (
-          <Card
-            key={index}
-            className="shadow-md hover:shadow-lg transition-shadow border border-blue-200 bg-white"
+        {kelompokList.map((kelompok) => (
+          <div
+            key={kelompok.id}
+            className="bg-white shadow-lg p-6 rounded-lg text-center border border-gray-200"
           >
-            <CardContent className="p-6 text-center flex flex-col items-center">
-              <h2 className="text-xl font-semibold text-blue-700 mb-2">
-                {item.nama}
-              </h2>
-              <p className="text-gray-600 mb-4">{item.deskripsi}</p>
-              <Button
-                onClick={() => item.link && window.open(item.link, "_blank")}
-                className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
-              >
+            <h2 className="text-2xl font-semibold mb-3 text-blue-700">
+              {kelompok.nama}
+            </h2>
+            <p className="text-gray-600 mb-6">{kelompok.deskripsi}</p>
+
+            <Link href={kelompok.path}>
+              <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-all">
                 Kunjungi
-                <ExternalLink size={16} />
-              </Button>
-            </CardContent>
-          </Card>
+              </button>
+            </Link>
+          </div>
         ))}
       </div>
     </div>
   );
-};
-
-export default HalamanKelompok;
+}
