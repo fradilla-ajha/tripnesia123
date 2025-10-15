@@ -27,11 +27,14 @@ export default function Page() {
   }, []);
 
   const fetchData = async () => {
-    const result = await getReservasi();
-    setData(result);
+    try {
+      const result = await getReservasi();
+      setData(result || []);
+    } catch (error) {
+      console.error("Gagal mengambil data:", error);
+    }
   };
 
-  // TAMBAH DATA
   const handleAdd = async () => {
     if (!newData.nama || !newData.email) {
       alert("Nama dan email wajib diisi!");
@@ -50,7 +53,6 @@ export default function Page() {
     fetchData();
   };
 
-  // HAPUS DATA
   const handleDelete = async (id: number) => {
     if (confirm("Yakin ingin menghapus data ini?")) {
       await deleteReservasi(id);
@@ -58,13 +60,11 @@ export default function Page() {
     }
   };
 
-  // BUKA MODAL EDIT
   const handleEdit = (item: any) => {
     setEditData(item);
     setShowModal(true);
   };
 
-  // SIMPAN HASIL EDIT
   const handleSaveEdit = async () => {
     if (editData) {
       await updateReservasi(editData.id, editData);
@@ -75,9 +75,9 @@ export default function Page() {
   };
 
   return (
-    <main className="pt-24 px-6 pb-10">
-      <h1 className="text-2xl font-bold mb-6 text-center">
-        Demo Crud Reservasi
+    <main className="pt-24 px-6 pb-10 bg-gray-50 min-h-screen">
+      <h1 className="text-3xl font-bold mb-6 text-center text-blue-700">
+        Demo CRUD Reservasi Online
       </h1>
 
       {/* FORM TAMBAH DATA */}
@@ -140,7 +140,7 @@ export default function Page() {
       </div>
 
       {/* TABEL DATA */}
-      <div className="bg-white p-6 rounded-xl shadow-md">
+      <div className="bg-white p-6 rounded-xl shadow-md overflow-x-auto">
         <h2 className="text-lg font-semibold mb-3">Daftar Reservasi</h2>
         <table className="w-full border border-gray-300 text-sm">
           <thead>
@@ -163,14 +163,12 @@ export default function Page() {
                 <td className="border px-2 py-1">{item.telepon}</td>
                 <td className="border px-2 py-1">{item.tanggal}</td>
                 <td className="border px-2 py-1">{item.jam}</td>
-                <td className="border px-2 py-1 text-center">
-                  {item.jumlah_orang}
-                </td>
+                <td className="border px-2 py-1 text-center">{item.jumlah_orang}</td>
                 <td className="border px-2 py-1">{item.catatan}</td>
                 <td className="border px-2 py-1 text-center">
                   <button
                     onClick={() => handleEdit(item)}
-                    className="bg-yellow-400 text-white px-3 py-1 rounded mr-2"
+                    className="bg-yellow-500 text-white px-3 py-1 rounded mr-2"
                   >
                     Edit
                   </button>
