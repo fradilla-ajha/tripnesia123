@@ -26,8 +26,6 @@ export default function Kelompok7Page() {
     try {
       const res = await fetch(`${API_BASE}?action=list`);
       const result = await res.json();
-
-      // Pastikan hasilnya selalu array
       const promos = Array.isArray(result)
         ? result.map((p) => ({
             id: p.id,
@@ -36,7 +34,6 @@ export default function Kelompok7Page() {
             valid_until: p.valid_until ?? "",
           }))
         : [result];
-
       setData(promos);
     } catch (err) {
       console.error("Error fetching data:", err);
@@ -49,7 +46,6 @@ export default function Kelompok7Page() {
     fetchData();
   }, []);
 
-  // Handle input
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -57,7 +53,6 @@ export default function Kelompok7Page() {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Simpan atau update data
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const method = editId ? "PUT" : "POST";
@@ -68,9 +63,7 @@ export default function Kelompok7Page() {
     try {
       const res = await fetch(endpoint, {
         method,
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
       const result = await res.json();
@@ -83,7 +76,6 @@ export default function Kelompok7Page() {
     }
   };
 
-  // Hapus data
   const handleDelete = async (id: number) => {
     if (!confirm("Yakin ingin menghapus promo ini?")) return;
     try {
@@ -98,7 +90,6 @@ export default function Kelompok7Page() {
     }
   };
 
-  // Edit data
   const handleEdit = (item: PromoItem) => {
     setForm({
       title: item.title ?? "",
@@ -110,7 +101,7 @@ export default function Kelompok7Page() {
 
   return (
     <div className="p-6 pt-24 min-h-screen bg-gray-50">
-      <h1 className="text-3xl font-bold mb-6 text-center text-green-700">
+      <h1 className="text-3xl font-bold mb-6 text-center text-blue-700">
         CRUD Kelompok 7 – Sobat Promo
       </h1>
 
@@ -126,7 +117,7 @@ export default function Kelompok7Page() {
             value={form.title ?? ""}
             onChange={handleChange}
             placeholder="Judul Promo"
-            className="border p-2 rounded"
+            className="border p-2 rounded bg-white"
             required
           />
           <textarea
@@ -134,7 +125,7 @@ export default function Kelompok7Page() {
             value={form.description ?? ""}
             onChange={handleChange}
             placeholder="Deskripsi Promo"
-            className="border p-2 rounded"
+            className="border p-2 rounded bg-white"
             required
           />
           <input
@@ -142,7 +133,7 @@ export default function Kelompok7Page() {
             name="valid_until"
             value={form.valid_until ?? ""}
             onChange={handleChange}
-            className="border p-2 rounded"
+            className="border p-2 rounded bg-white"
             required
           />
         </div>
@@ -152,7 +143,7 @@ export default function Kelompok7Page() {
           className={`w-full py-2 mt-4 rounded text-white ${
             editId
               ? "bg-yellow-500 hover:bg-yellow-600"
-              : "bg-green-600 hover:bg-green-700"
+              : "bg-blue-600 hover:bg-blue-700"
           }`}
         >
           {editId ? "Update Promo" : "Tambah Promo"}
@@ -161,7 +152,7 @@ export default function Kelompok7Page() {
 
       {/* Tabel Data */}
       <div className="max-w-5xl mx-auto bg-white shadow-md rounded-lg p-6">
-        <h2 className="text-xl font-semibold mb-4 text-gray-700">
+        <h2 className="text-xl font-semibold mb-4 text-blue-700">
           Daftar Promo Aktif
         </h2>
 

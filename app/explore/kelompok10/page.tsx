@@ -1,42 +1,44 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 
-interface MenuItem {
+interface Product {
   id?: number;
-  image: string;
+  image?: string;
   title: string;
-  description?: string;
-  price: number;
-  stock?: number;
+  description: string;
+  price: string;
+  stock: string;
 }
 
 export default function Kelompok10Page() {
-  const [data, setData] = useState<MenuItem[]>([]);
+  const [data, setData] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [form, setForm] = useState<MenuItem>({
+  const [editId, setEditId] = useState<number | null>(null);
+  const [form, setForm] = useState<Product>({
     title: "",
     description: "",
-    image: "",
-    price: 0,
-    stock: 0,
+    price: "",
+    stock: "",
   });
-  const [editId, setEditId] = useState<number | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
-  // Base URL API
-  const API_BASE = "https://dodgerblue-monkey-417412.hostingersite.com/api/menu";
+  const API_BASE = "/api/kelompok10";
 
-  // Fetch data
+  // 🔹 Ambil data dari API
   const fetchData = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch(API_BASE);
+      const res = await fetch(API_BASE, { cache: "no-store" });
       const result = await res.json();
 
-      // Gunakan key "success" bukan "status"
-      if (result.success) {
+      if (result.success && Array.isArray(result.data)) {
         setData(result.data);
+      } else if (Array.isArray(result?.data?.data)) {
+        // Jika nested data
+        setData(result.data.data);
       } else {
-        console.error("Gagal memuat data:", result);
+        console.error("Struktur data tidak sesuai:", result);
       }
     } catch (err) {
       console.error("Error fetching data:", err);
@@ -49,7 +51,7 @@ export default function Kelompok10Page() {
     fetchData();
   }, []);
 
-  // Handle input form
+  // 🔹 Handle perubahan input
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -57,31 +59,38 @@ export default function Kelompok10Page() {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Create or update
+  // 🔹 Upload gambar
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    setImageFile(file);
+  };
+
+  // 🔹 Tambah atau Update produk
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     try {
-      const method = editId ? "PUT" : "POST";
-      const url = editId ? `${API_BASE}/${editId}` : API_BASE;
+      const formData = new FormData();
+      formData.append("title", form.title);
+      formData.append("description", form.description);
+      formData.append("price", form.price);
+      formData.append("stock", form.stock);
+      if (imageFile) formData.append("image", imageFile);
 
-      const res = await fetch(url, {
+      let method = "POST";
+      if (editId) {
+        formData.append("id", editId.toString());
+        method = "PUT";
+      }
+
+      const res = await fetch(API_BASE, {
         method,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(form),
+        body: formData,
       });
 
       const result = await res.json();
       alert(result.message || "Berhasil disimpan");
-      setForm({
-        title: "",
-        description: "",
-        image: "",
-        price: 0,
-        stock: 0,
-      });
+      setForm({ title: "", description: "", price: "", stock: "" });
+      setImageFile(null);
       setEditId(null);
       fetchData();
     } catch (err) {
@@ -89,142 +98,168 @@ export default function Kelompok10Page() {
     }
   };
 
-  // Delete data
+  // 🔹 Hapus produk
   const handleDelete = async (id: number) => {
-    if (!confirm("Yakin ingin menghapus data ini?")) return;
+    if (!confirm("Yakin ingin menghapus produk ini?")) return;
     try {
-      const res = await fetch(`${API_BASE}/${id}`, {
+      const res = await fetch(API_BASE, {
         method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
       });
+
       const result = await res.json();
-      alert(result.message || "Data dihapus");
+      alert(result.message || "Produk dihapus");
       fetchData();
     } catch (err) {
       console.error("Error deleting:", err);
     }
   };
 
-  // Edit data
-  const handleEdit = (item: MenuItem) => {
+  // 🔹 Edit produk
+  const handleEdit = (item: Product) => {
     setForm({
       title: item.title,
-      description: item.description || "",
-      image: item.image,
+      description: item.description,
       price: item.price,
-      stock: item.stock || 0,
+      stock: item.stock,
     });
     setEditId(item.id || null);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
     <div className="p-6 pt-24 min-h-screen bg-gray-50">
-      <h1 className="text-3xl font-bold mb-6 text-center text-blue-700">
-        CRUD Kelompok 10 - Cafeku
+      <h1 className="text-3xl font-bold mb-6 text-center text-amber-700">
+        ☕ CRUD Kelompok 10 – Cafeku
       </h1>
 
-      {/* Form tambah/edit */}
+      {/* Form Tambah/Edit Produk */}
       <form
         onSubmit={handleSubmit}
-        className="max-w-md mx-auto bg-white shadow-md rounded-lg p-6 mb-10"
+        className="max-w-3xl mx-auto bg-white shadow-md rounded-lg p-6 mb-10"
       >
-        <input
-          type="text"
-          name="title"
-          value={form.title}
-          onChange={handleChange}
-          placeholder="Nama Menu"
-          className="border p-2 w-full mb-3 rounded"
-          required
-        />
-        <textarea
-          name="description"
-          value={form.description}
-          onChange={handleChange}
-          placeholder="Deskripsi"
-          className="border p-2 w-full mb-3 rounded"
-        />
-        <input
-          type="number"
-          name="price"
-          value={form.price}
-          onChange={handleChange}
-          placeholder="Harga"
-          className="border p-2 w-full mb-3 rounded"
-          required
-        />
-        <input
-          type="number"
-          name="stock"
-          value={form.stock}
-          onChange={handleChange}
-          placeholder="Stok"
-          className="border p-2 w-full mb-3 rounded"
-        />
-        <input
-          type="text"
-          name="image"
-          value={form.image}
-          onChange={handleChange}
-          placeholder="Nama file gambar (contoh: cappuccino.jpg)"
-          className="border p-2 w-full mb-3 rounded"
-        />
+        <div className="grid grid-cols-2 gap-4">
+          <input
+            type="text"
+            name="title"
+            value={form.title}
+            onChange={handleChange}
+            placeholder="Nama Produk"
+            className="border p-2 rounded"
+            required
+          />
+          <input
+            type="number"
+            name="price"
+            value={form.price}
+            onChange={handleChange}
+            placeholder="Harga"
+            className="border p-2 rounded"
+            required
+          />
+          <input
+            type="number"
+            name="stock"
+            value={form.stock}
+            onChange={handleChange}
+            placeholder="Stok"
+            className="border p-2 rounded"
+            required
+          />
+          <textarea
+            name="description"
+            value={form.description}
+            onChange={handleChange}
+            placeholder="Deskripsi Produk"
+            className="border p-2 rounded col-span-2"
+          />
+          <input
+            type="file"
+            onChange={handleImageChange}
+            accept="image/*"
+            className="col-span-2"
+          />
+        </div>
+
         <button
           type="submit"
-          className="bg-blue-600 text-white w-full py-2 rounded hover:bg-blue-700"
+          className={`w-full py-2 mt-4 rounded text-white ${
+            editId
+              ? "bg-yellow-500 hover:bg-yellow-600"
+              : "bg-green-600 hover:bg-green-700"
+          }`}
         >
-          {editId ? "Update Menu" : "Tambah Menu"}
+          {editId ? "Update Produk" : "Tambah Produk"}
         </button>
       </form>
 
-      {/* Daftar data */}
-      <div className="max-w-4xl mx-auto">
+      {/* Tabel Daftar Produk */}
+      <div className="max-w-6xl mx-auto bg-white shadow-md rounded-lg p-6">
+        <h2 className="text-xl font-semibold mb-4 text-amber-700">
+          Daftar Menu Cafeku
+        </h2>
+
         {isLoading ? (
           <p className="text-center text-gray-500">Loading data...</p>
         ) : data.length > 0 ? (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {data.map((item) => (
-              <div
-                key={item.id}
-                className="p-4 border rounded bg-white shadow-sm flex flex-col"
-              >
-                <img
-                  src={`https://dodgerblue-monkey-417412.hostingersite.com/storage/${item.image}`}
-                  alt={item.title}
-                  className="w-full h-48 object-cover rounded mb-2"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src =
-                      "https://via.placeholder.com/200x150?text=No+Image";
-                  }}
-                />
-                <h2 className="font-semibold text-lg text-gray-800">
-                  {item.title}
-                </h2>
-                <p
-                  className="text-gray-600 text-sm"
-                  dangerouslySetInnerHTML={{
-                    __html: item.description || "Tidak ada deskripsi",
-                  }}
-                />
-                <p className="text-gray-500 text-sm mt-1">
-                  Rp {item.price} • Stok: {item.stock}
-                </p>
-                <div className="flex gap-2 mt-3">
-                  <button
-                    onClick={() => handleEdit(item)}
-                    className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(item.id!)}
-                    className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
-                  >
-                    Hapus
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
+          <table className="w-full border border-gray-300 rounded text-sm">
+            <thead>
+              <tr className="bg-gray-100 text-left">
+                <th className="border px-3 py-2">Gambar</th>
+                <th className="border px-3 py-2">Nama</th>
+                <th className="border px-3 py-2">Deskripsi</th>
+                <th className="border px-3 py-2">Harga</th>
+                <th className="border px-3 py-2">Stok</th>
+                <th className="border px-3 py-2 text-center">Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.map((item, index) => (
+                <tr key={item.id ?? index} className="hover:bg-gray-50">
+                  <td className="border px-3 py-2 text-center">
+                    {item.image ? (
+                      <img
+                        src={`https://dodgerblue-monkey-417412.hostingersite.com/storage/products/${item.image}`}
+                        alt={item.title}
+                        className="w-20 h-20 object-cover rounded"
+                      />
+                    ) : (
+                      <span className="text-gray-400">Tidak ada</span>
+                    )}
+                  </td>
+                  <td className="border px-3 py-2 font-medium text-gray-800">
+                    {item.title}
+                  </td>
+                  <td className="border px-3 py-2 text-gray-600">
+                    {item.description || "-"}
+                  </td>
+                  <td className="border px-3 py-2 text-gray-700">
+                    Rp {Number(item.price).toLocaleString("id-ID")}
+                  </td>
+                  <td className="border px-3 py-2 text-gray-700">
+                    {item.stock}
+                  </td>
+                  <td className="border px-3 py-2 text-center">
+                    <div className="flex justify-center gap-2">
+                      <button
+                        onClick={() => handleEdit(item)}
+                        className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(item.id!)}
+                        className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
+                      >
+                        Hapus
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         ) : (
           <p className="text-center text-gray-500">Belum ada data menu.</p>
         )}

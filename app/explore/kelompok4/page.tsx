@@ -22,7 +22,6 @@ export default function Kelompok4Page() {
 
   // Base URL API
   const API_BASE = "https://projekkelompok4-production-3d9b.up.railway.app/api";
-
   // Fetch data
   const fetchData = async () => {
     setIsLoading(true);

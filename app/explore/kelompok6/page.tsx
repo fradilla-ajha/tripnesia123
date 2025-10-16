@@ -26,7 +26,6 @@ export default function Kelompok6Page() {
   });
   const [editId, setEditId] = useState<number | null>(null);
 
-  // Base URL dan Token
   const API_BASE =
     "https://rsjauhzcwslcsoktbplq.supabase.co/rest/v1/reservasi";
   const TOKEN =
@@ -90,7 +89,11 @@ export default function Kelompok6Page() {
       });
 
       if (!res.ok) throw new Error("Gagal menyimpan data");
-      alert(editId ? "Reservasi berhasil diperbarui!" : "Reservasi berhasil ditambahkan!");
+      alert(
+        editId
+          ? "Reservasi berhasil diperbarui!"
+          : "Reservasi berhasil ditambahkan!"
+      );
       setForm({
         nama: "",
         email: "",
@@ -143,7 +146,7 @@ export default function Kelompok6Page() {
 
   return (
     <div className="p-6 pt-24 min-h-screen bg-gray-50">
-      <h1 className="text-3xl font-bold mb-6 text-center text-purple-700">
+      <h1 className="text-3xl font-bold mb-6 text-center text-blue-700">
         CRUD Kelompok 6 – Reservasi Restoran
       </h1>
 
@@ -159,7 +162,7 @@ export default function Kelompok6Page() {
             value={form.nama ?? ""}
             onChange={handleChange}
             placeholder="Nama Lengkap"
-            className="border p-2 rounded"
+            className="border p-2 rounded bg-white"
             required
           />
           <input
@@ -168,7 +171,7 @@ export default function Kelompok6Page() {
             value={form.email ?? ""}
             onChange={handleChange}
             placeholder="Email"
-            className="border p-2 rounded"
+            className="border p-2 rounded bg-white"
             required
           />
           <input
@@ -177,7 +180,7 @@ export default function Kelompok6Page() {
             value={form.telepon ?? ""}
             onChange={handleChange}
             placeholder="Nomor Telepon"
-            className="border p-2 rounded"
+            className="border p-2 rounded bg-white"
             required
           />
           <input
@@ -185,7 +188,7 @@ export default function Kelompok6Page() {
             name="tanggal"
             value={form.tanggal ?? ""}
             onChange={handleChange}
-            className="border p-2 rounded"
+            className="border p-2 rounded bg-white"
             required
           />
           <input
@@ -193,7 +196,7 @@ export default function Kelompok6Page() {
             name="jam"
             value={form.jam ?? ""}
             onChange={handleChange}
-            className="border p-2 rounded"
+            className="border p-2 rounded bg-white"
             required
           />
           <input
@@ -202,7 +205,7 @@ export default function Kelompok6Page() {
             value={form.jumlah_orang ?? 1}
             onChange={handleChange}
             placeholder="Jumlah Orang"
-            className="border p-2 rounded"
+            className="border p-2 rounded bg-white"
             min={1}
             required
           />
@@ -211,7 +214,7 @@ export default function Kelompok6Page() {
             value={form.catatan ?? ""}
             onChange={handleChange}
             placeholder="Catatan Tambahan"
-            className="border p-2 rounded col-span-2"
+            className="border p-2 rounded col-span-2 bg-white"
           />
         </div>
 
@@ -220,7 +223,7 @@ export default function Kelompok6Page() {
           className={`w-full py-2 mt-4 rounded text-white ${
             editId
               ? "bg-yellow-500 hover:bg-yellow-600"
-              : "bg-purple-600 hover:bg-purple-700"
+              : "bg-blue-600 hover:bg-blue-700"
           }`}
         >
           {editId ? "Update Reservasi" : "Tambah Reservasi"}
@@ -229,7 +232,7 @@ export default function Kelompok6Page() {
 
       {/* Tabel Data */}
       <div className="max-w-6xl mx-auto bg-white shadow-md rounded-lg p-6">
-        <h2 className="text-xl font-semibold mb-4 text-gray-700">
+        <h2 className="text-xl font-semibold mb-4 text-blue-700">
           Daftar Reservasi
         </h2>
 
@@ -260,9 +263,7 @@ export default function Kelompok6Page() {
                   <td className="border px-3 py-2 text-center">
                     {item.jumlah_orang}
                   </td>
-                  <td className="border px-3 py-2">
-                    {item.catatan || "—"}
-                  </td>
+                  <td className="border px-3 py-2">{item.catatan || "—"}</td>
                   <td className="border px-3 py-2 text-center">
                     <div className="flex justify-center gap-2">
                       <button

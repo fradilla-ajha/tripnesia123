@@ -111,8 +111,8 @@ export default function Kelompok5Page() {
   };
 
   return (
-    <div className="p-6 pt-24 min-h-screen bg-amber-50">
-      <h1 className="text-3xl font-bold mb-6 text-center text-amber-800">
+    <div className="p-6 pt-24 min-h-screen bg-gray-50">
+      <h1 className="text-3xl font-bold mb-6 text-center text-blue-700">
         ☕ CRUD Kelompok 5 – Kopi & Non Kopi
       </h1>
 
@@ -164,15 +164,17 @@ export default function Kelompok5Page() {
 
         <button
           type="submit"
-          className="bg-amber-700 text-white w-full py-2 mt-4 rounded hover:bg-amber-800"
+          className={`w-full py-2 mt-4 rounded text-white ${editId ? "bg-yellow-500 hover:bg-yellow-600" : "bg-blue-600 hover:bg-blue-700"
+            }`}
         >
           {editId ? "Update Data" : "Tambah Data"}
         </button>
+
       </form>
 
-      {/* Daftar data dalam bentuk tabel */}
+      {/* Daftar data */}
       <div className="max-w-5xl mx-auto bg-white shadow-md rounded-lg p-6">
-        <h2 className="text-xl font-semibold mb-4 text-amber-800">
+        <h2 className="text-xl font-semibold mb-4 text-blue-700">
           Daftar {form.category === "kopi" ? "Menu Kopi" : "Menu Non Kopi"}
         </h2>
 
@@ -181,7 +183,7 @@ export default function Kelompok5Page() {
         ) : data.length > 0 ? (
           <table className="w-full border border-gray-300 rounded text-sm">
             <thead>
-              <tr className="bg-amber-100 text-left">
+              <tr className="bg-gray-100 text-left">
                 <th className="border px-3 py-2">Nama Menu</th>
                 <th className="border px-3 py-2">Deskripsi</th>
                 <th className="border px-3 py-2">Kategori</th>
@@ -191,7 +193,7 @@ export default function Kelompok5Page() {
             </thead>
             <tbody>
               {data.map((item) => (
-                <tr key={item.id} className="hover:bg-amber-50">
+                <tr key={item.id} className="hover:bg-gray-50">
                   <td className="border px-3 py-2 font-medium text-gray-800">
                     {item.name}
                   </td>

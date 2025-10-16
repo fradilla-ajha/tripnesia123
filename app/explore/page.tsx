@@ -9,7 +9,7 @@ export default function ExplorePage() {
     { id: 5, nama: "Kelompok 5", deskripsi: "Aplikasi Booking — Modul reservasi", path: "/explore/kelompok5" },
     { id: 6, nama: "Kelompok 6", deskripsi: "Reservasi Tempat", path: "/explore/kelompok6" },
     { id: 7, nama: "Kelompok 7", deskripsi: "Sobat Promo", path: "/explore/kelompok7" },
-    { id: 9, nama: "Kelompok 9", deskripsi: "Sistem Evaluasi Produk", path: "/explore/kelompok9" },
+    { id: 9, nama: "Kelompok 9", deskripsi: "Penjualan Akun", path: "/explore/kelompok9" },
     { id: 10, nama: "Kelompok 10", deskripsi: "Cafeku — Menu & Produk", path: "/explore/kelompok10" },
   ];
 
